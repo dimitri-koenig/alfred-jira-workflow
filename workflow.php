@@ -50,7 +50,7 @@ if ($selectedFilterKey === FALSE) {
 	}
 
 	try {
-		$response = $wf->request($config['hostUrl'] . '/rest/api/latest/search?maxResults=20&fields=id,key,summary,description&jql=' . urlencode($filter), $options);
+		$response = $wf->request($config['hostUrl'] . '/rest/api/latest/search?maxResults=20&fields=id,key,summary,description,project&jql=' . urlencode($filter), $options);
 		$jsonResponse = json_decode($response);
 
 		if ($jsonResponse->errorMessages) {
@@ -65,7 +65,9 @@ if ($selectedFilterKey === FALSE) {
 
 		if ($jsonResponse->total > 0) {
 			foreach ($jsonResponse->issues as $issue) {
-				$wf->result($selectedFilter . $issue->id, $config['hostUrl'] . '/browse/' . $issue->key, strip_tags($issue->fields->summary), strip_tags($issue->fields->description), 'icon.png');
+				$avatarFilename = downloadProjectAvatar($issue->fields->project);
+
+				$wf->result($selectedFilter . $issue->id, $config['hostUrl'] . '/browse/' . $issue->key, strip_tags($issue->fields->summary), strip_tags($issue->fields->description), $avatarFilename);
 			}
 		}
 	} catch (Exception $e) {
@@ -74,5 +76,24 @@ if ($selectedFilterKey === FALSE) {
 }
 
 echo $wf->toxml();
+
+
+function downloadProjectAvatar($project) {
+	if (empty($project->id)) {
+		return;
+	}
+
+	$filename = $GLOBALS['wf']->cache() . '/project-avatar-' . $project->id . '.png';
+
+	if (!file_exists($filename) && !empty($project->avatarUrls->{'48x48'})) {
+		$response = $GLOBALS['wf']->request($project->avatarUrls->{'48x48'}, $GLOBALS['options']);
+
+		if ($response) {
+			file_put_contents($filename, $response);
+		}
+	}
+
+	return $filename;
+}
 
 ?>
