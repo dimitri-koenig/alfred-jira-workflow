@@ -34,10 +34,7 @@ if ($selectedFilterKey === FALSE) {
 	$searchWords = trim(implode(' ', $inputParts));
 	$filter = '';
 
-	if (count($inputParts) === 1 && !empty($inputParts[0])) {
-		$filter .= 'text ~ "' . $inputParts[0] . '*" AND ';
-	}
-	if (count($inputParts) > 1) {
+	if (!empty($searchWords)) {
 		$filter .= 'text ~ "' . $searchWords . '" AND ';
 	}
 
