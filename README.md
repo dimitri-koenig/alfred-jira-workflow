@@ -27,4 +27,3 @@ If you just enter that you get a list of all your recently viewed issues. If you
 ## TODOS
 
 * Make filteres configurable
-* Add project avatars as search result item icons
