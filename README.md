@@ -26,5 +26,5 @@ If you just enter that you get a list of all your recently viewed issues. If you
 
 ## TODOS
 
+* Refactoring
 * Explain keychain usage and alternative
-* Make filteres configurable
