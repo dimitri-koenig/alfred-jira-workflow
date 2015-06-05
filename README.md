@@ -4,7 +4,7 @@ Uses Jira's REST Api for issue searching, and your local mac keychain for creden
 
 ## Installation
 
-1. Clone this repo into your Alfred workflows directory `~/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows/` OR [download the master branch as zip file](https://github.com/dimitri-koenig/alfred-jira-workflow/archive/master.zip)
+1. Clone this repo into your Alfred workflows directory `~/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows/` OR [download the master branch as zip file](https://github.com/dimitri-koenig/alfred-jira-workflow/archive/master.zip) and double click on the `jira.search.suggest` workflow package file
 
 2. Go into your mac keychain program, and either search for your jira safari login data, or create such an item (more later)
 
