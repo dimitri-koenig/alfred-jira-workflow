@@ -1,14 +1,14 @@
 # Jira Search Suggest Workflow for Alfred 2
 
-Uses Jira's REST Api for issue searching
+Uses Jira's REST Api for issue searching, and your local mac keychain for credentials
 
 ## Installation
 
 1. Clone this repo into your Alfred workflows directory `~/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows/`
 
-2. Go into the cloned repo directory and copy the `config.example.php` to `config.php`
+2. Go into your mac keychain program, and either search for your jira safari login data, or create such an item (more later)
 
-3. Insert your jira credentials into that `config.php` file
+3. Add "com.alfredapp.dimitrikoenig.jirasuggest" to the comment field
 
 4. Ready
 
@@ -26,4 +26,5 @@ If you just enter that you get a list of all your recently viewed issues. If you
 
 ## TODOS
 
+* Explain keychain usage and alternative
 * Make filteres configurable
