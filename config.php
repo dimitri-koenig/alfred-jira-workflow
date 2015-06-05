@@ -6,5 +6,3 @@ return array(
 	'password' => '', // your jira password
 	'hostUrl' => '' // your jira url, ex: https://my.jira.com
 );
-
-?>
