@@ -1,6 +1,7 @@
 <?php
 
 require_once('workflows-library.php');
+require_once('helper-functions.php');
 
 $config = (require_once 'config.php');
 
@@ -86,61 +87,3 @@ else
 }
 
 echo $wf->toxml();
-
-function getCredentialsFromLocalKeychain()
-{
-	$config = [];
-
-	exec('security find-internet-password -j "' . $_ENV['alfred_workflow_bundleid'] . '" -g 2>&1; echo $?', $keychainData);
-
-	$protocol = '';
-	$server = '';
-	foreach ($keychainData as $singleLine)
-	{
-		if (stripos($singleLine, '"acct"') !== FALSE)
-		{
-			$config['username'] = preg_replace('/^.*"([^"]+)"\w*$/', '$1', $singleLine);
-			continue;
-		}
-		if (stripos($singleLine, 'password:') !== FALSE)
-		{
-			$config['password'] = preg_replace('/^.*"([^"]+)"\w*$/', '$1', $singleLine);
-			continue;
-		}
-		if (stripos($singleLine, '"ptcl"') !== FALSE)
-		{
-			$protocol = preg_replace('/^.*"([^"]+)"\w*$/', '$1', $singleLine);
-			continue;
-		}
-		if (stripos($singleLine, '"srvr"') !== FALSE)
-		{
-			$server = preg_replace('/^.*"([^"]+)"\w*$/', '$1', $singleLine);
-			continue;
-		}
-	}
-	$config['hostUrl'] = ($protocol === 'htps' ? 'https://' : 'http://') . $server;
-
-	return $config;
-}
-
-function downloadProjectAvatar($project)
-{
-	if (empty($project->id))
-	{
-		return '';
-	}
-
-	$filename = $GLOBALS['wf']->cache() . '/project-avatar-' . $project->id . '.png';
-
-	if (!file_exists($filename) && !empty($project->avatarUrls->{'48x48'}))
-	{
-		$response = $GLOBALS['wf']->request($project->avatarUrls->{'48x48'}, $GLOBALS['options']);
-
-		if ($response)
-		{
-			file_put_contents($filename, $response);
-		}
-	}
-
-	return $filename;
-}
