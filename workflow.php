@@ -34,6 +34,19 @@ foreach ($availableFilters as $filter)
 
 if ($selectedFilter === FALSE)
 {
+	if (!empty($possibleFilter)) {
+		usort($availableFilters, function($filterA, $filterB) use ($possibleFilter) {
+			$similarToA = similar_text($filterA['key'], $possibleFilter);
+			$similarToB = similar_text($filterB['key'], $possibleFilter);
+
+			if ($similarToA === $similarToB) {
+				return 0;
+			}
+
+			return ($similarToA > $similarToB) ? -1 : 1;
+		});
+	}
+
 	foreach ($availableFilters as $filter)
 	{
 		$wf->result($filter['key'], $input, $filter['title'], '', 'icon.png', 'no', $filter['key']);
