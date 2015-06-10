@@ -70,7 +70,7 @@ else
 		$response = $wf->request($config['hostUrl'] . '/rest/api/latest/search?maxResults=20&fields=id,key,summary,description,project&jql=' . urlencode($filter), $options);
 		$jsonResponse = json_decode($response);
 
-		if ($jsonResponse->errorMessages)
+		if (isset($jsonResponse->errorMessages))
 		{
 			foreach ($jsonResponse->errorMessages as $errorMessage)
 			{
@@ -89,7 +89,7 @@ else
 			{
 				$avatarFilename = downloadProjectAvatar($issue->fields->project);
 
-				$wf->result($selectedFilter . $issue->id, $config['hostUrl'] . '/browse/' . $issue->key, strip_tags($issue->fields->summary), strip_tags($issue->fields->description), $avatarFilename);
+				$wf->result($selectedFilter['key'] . $issue->id, $config['hostUrl'] . '/browse/' . $issue->key, strip_tags($issue->fields->summary), strip_tags($issue->fields->description), $avatarFilename);
 			}
 		}
 	}
