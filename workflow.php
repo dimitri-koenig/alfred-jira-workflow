@@ -89,7 +89,7 @@ else
 			{
 				$avatarFilename = downloadProjectAvatar($issue->fields->project);
 
-				$wf->result($selectedFilter['key'] . $issue->id, $config['hostUrl'] . '/browse/' . $issue->key, strip_tags($issue->fields->summary), strip_tags($issue->fields->description), $avatarFilename);
+				$wf->result($selectedFilter['key'] . $issue->id, $config['hostUrl'] . '/browse/' . $issue->key, sprintf('[%s] %s', $issue->key, strip_tags($issue->fields->summary)), strip_tags($issue->fields->description), $avatarFilename);
 			}
 		}
 	}
