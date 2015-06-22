@@ -81,7 +81,7 @@ if ($selectedFilter === false) {
             foreach ($jsonResponse->issues as $issue) {
                 $avatarFilename = downloadProjectAvatar($issue->fields->project);
 
-                $wf->result($selectedFilter['key'] . $issue->id, $config['hostUrl'] . '/browse/' . $issue->key, sprintf('[%s] %s', $issue->key, strip_tags($issue->fields->summary)), strip_tags($issue->fields->description), $avatarFilename);
+                $wf->result(microtime(true), $config['hostUrl'] . '/browse/' . $issue->key, sprintf('[%s] %s', $issue->key, strip_tags($issue->fields->summary)), strip_tags($issue->fields->description), $avatarFilename);
             }
         }
     } catch (Exception $e) {
