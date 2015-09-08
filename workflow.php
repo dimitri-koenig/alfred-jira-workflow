@@ -55,10 +55,16 @@ if ($selectedFilter === false) {
 } else {
     array_shift($inputParts);
     $searchWords = trim(implode(' ', $inputParts));
+    $projectCode = array_shift($inputParts);
+    $textFilter = trim(implode(' ', $inputParts));
     $filter = '';
 
-    if (!empty($searchWords)) {
-        $filter .= 'text ~ "' . $searchWords . '" AND ';
+    if (!empty($projectCode)) {
+        $filter .= 'project = "' . $projectCode . '" AND ';
+    }
+
+    if (!empty($textFilter)) {
+        $filter .= 'text ~ "' . $textFilter . '" AND ';
     }
 
     $filter .= $selectedFilter['jql'];
