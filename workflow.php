@@ -70,7 +70,7 @@ if ($selectedFilter === false) {
     $filter .= $selectedFilter['jql'];
 
     try {
-        $response = $wf->request($config['hostUrl'] . '/rest/api/latest/search?maxResults=20&fields=id,key,summary,description,project&jql=' . urlencode($filter), $options);
+        $response = $wf->request($config['hostUrl'] . '/rest/api/latest/search?maxResults=50&fields=id,key,summary,description,project&jql=' . urlencode($filter), $options);
         $jsonResponse = json_decode($response);
 
         if (isset($jsonResponse->errorMessages)) {
