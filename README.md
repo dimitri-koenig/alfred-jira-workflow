@@ -16,6 +16,10 @@ Uses Jira's REST Api for issue searching, and your local mac keychain for creden
 
 Using `js` you can trigger this workflow. Then you get two available filters.
 
+As a third parameter you can specify a project token to filter your results. E.g.:
+
+`js my-open-issues MYPROJECT`
+
 ### my-open-issues
 
 If you just enter that you get a list of all your open issues. If you enter more text the whole search will be filtered for that text.
