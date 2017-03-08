@@ -1,25 +1,42 @@
 <?php
 
-require_once('workflows-library.php');
-require_once('helper-functions.php');
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
+date_default_timezone_set('UTC');
+
+require_once('workflows-library.php');
 $wf = new Workflows();
 
-$config = (require_once 'config.php');
-
-if ($config['useLocalKeychain']) {
-    $config = array_merge($config, getCredentialsFromLocalKeychain());
-}
-
-if (empty($config['username']) || empty($config['password'])) {
-    $wf->result('jira-auth-error', '', 'Auth config incomplete', '', 'icon.png');
+if (empty($_ENV['hostUrl']) || empty($_ENV['username']) || empty($_ENV['password'])) {
+    $wf->result('jira-auth-error', '', 'ENV Variables not filled', '', 'icon.png');
     echo $wf->toxml();
-    die();
+    die('');
 }
 
-$options = array(
-    CURLOPT_USERPWD => $config['username'] . ':' . $config['password']
-);
+$options = [
+    CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+    CURLOPT_USERPWD => $_ENV['username'] . ':' . $_ENV['password']
+];
+
+function downloadProjectAvatar($project)
+{
+    if (empty($project->id)) {
+        return '';
+    }
+
+    $filename = $GLOBALS['wf']->cache() . '/project-avatar-' . $project->id . '.png';
+
+    if (!file_exists($filename) && !empty($project->avatarUrls->{'48x48'})) {
+        $response = $GLOBALS['wf']->request($project->avatarUrls->{'48x48'}, $GLOBALS['options']);
+
+        if ($response) {
+            file_put_contents($filename, $response);
+        }
+    }
+
+    return $filename;
+}
 
 // $input is given
 $inputParts = explode(' ', $input);
@@ -70,7 +87,7 @@ if ($selectedFilter === false) {
     $filter .= $selectedFilter['jql'];
 
     try {
-        $response = $wf->request($config['hostUrl'] . '/rest/api/latest/search?maxResults=50&fields=id,key,summary,description,project&jql=' . urlencode($filter), $options);
+        $response = $wf->request($_ENV['hostUrl'] . '/rest/api/latest/search?maxResults=50&fields=id,key,summary,description,project&jql=' . urlencode($filter), $options);
         $jsonResponse = json_decode($response);
 
         if (isset($jsonResponse->errorMessages)) {
@@ -87,7 +104,7 @@ if ($selectedFilter === false) {
             foreach ($jsonResponse->issues as $issue) {
                 $avatarFilename = downloadProjectAvatar($issue->fields->project);
 
-                $wf->result(microtime(true), $config['hostUrl'] . '/browse/' . $issue->key, sprintf('[%s] %s', $issue->key, strip_tags($issue->fields->summary)), strip_tags($issue->fields->description), $avatarFilename);
+                $wf->result(microtime(true), $_ENV['hostUrl'] . '/browse/' . $issue->key, sprintf('[%s] %s', $issue->key, strip_tags($issue->fields->summary)), strip_tags($issue->fields->description), $avatarFilename);
             }
         }
     } catch (Exception $e) {
